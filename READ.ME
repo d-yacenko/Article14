@@ -1,0 +1,12 @@
+echo -n "hello world!" > msg.txt
+steghide embed \
+  -cf images/0.07180100_1442390923_.jpg \   # cover file (исходное изображение)
+  -ef msg.txt \                              # файл с сообщением
+  -sf images/0.07180100_1442390923_stegano.jpg \  # куда сохранить
+  -p "strong-passphrase"                     # пароль (нужен для извлечения)
+steghide extract \
+  -sf images/0.07180100_1442390923_stegano.jpg \
+  -xf out.txt \
+  -p "strong-passphrase"
+
+cat out.txt   # должно напечатать: hello world!
