@@ -1,3 +1,59 @@
+# Perceptual Hash + Fuzzy Extractor Demo
+
+This repository contains a proof-of-concept implementation of a two-layer pipeline for image similarity search and cryptographic verification.
+
+## What is implemented
+
+The demo combines:
+
+1. **Perceptual hashing layer**  
+   An image is mapped to a binary code using a deep visual embedding and binarization.  
+   This code is used for approximate nearest-neighbor search in Hamming space.
+
+2. **Cryptographic verification layer**  
+   The binary perceptual code is treated as a noisy source for a fuzzy extractor.  
+   A reproducible secret is derived and then used to generate a verification tag.
+
+The goal of the pipeline is to support:
+- fast perceptual retrieval of visually similar images,
+- and an additional verification step based on a reproducible cryptographic tag.
+
+## Repository contents
+
+- `perceptual_fe_demo.ipynb` — main demonstration notebook
+- `reports/summary_metrics.json` — compact machine-readable summary of experimental metrics
+- `reports/summary_metrics.csv` — tabular version of the same metrics
+- `reports/retrieval_topk.csv` — example retrieval / verification output
+- `reports/intra_ber_hist.png` — histogram of intra-pair BER values
+- `reports/inter_dist_hist.png` — histogram of inter-image normalized Hamming distances
+
+## What the current experiments show
+
+The notebook includes a small-scale proof-of-concept evaluation that demonstrates:
+
+- retrieval of nearest perceptual neighbors,
+- fuzzy extractor reconstruction for matching / near-matching codes,
+- tag reproduction and verification,
+- preliminary robustness statistics via intra-BER,
+- preliminary separability statistics via inter-image Hamming distances.
+
+These results are intended as a compact demonstration of pipeline behavior, not as a large-scale benchmark.
+
+## Notes
+
+This repository is primarily meant to support the accompanying paper and provide a transparent implementation of the proposed pipeline.  
+The current evaluation is preliminary and focused on demonstrating the mechanics of the approach.
+
+
+## Optional: reproduce a simple stego example
+
+The repository is not primarily a steganography project, but one of the demo scenarios uses a visually similar yet byte-modified image to illustrate how the pipeline behaves on near-duplicate content.
+
+If you want to reproduce such an example locally, you can generate a simple stego image with `steghide` and then use it in the notebook as an auxiliary test case.
+
+Example:
+
+```bash
 echo -n "hello world!" > msg.txt
 steghide embed \
   -cf images/0.07180100_1442390923_.jpg \   # cover file (исходное изображение)
@@ -10,3 +66,4 @@ steghide extract \
   -p "strong-passphrase"
 
 cat out.txt   # должно напечатать: hello world!
+```
